@@ -8,14 +8,8 @@ source = [
 ]
 
 source.each do |url, day|
-  x = ScrapeFitc.new
-  x.page_url = url
-  x.conference_day = day
-  x.get_page
-  x.get_rows
+  x = ScrapeFitc.new(url, day)
   x.build_sessions
-
-  puts x.sessions # should be valid json
 
   File.open("./json/temp-#{day}.json","w") do |f|
     f.write(x.sessions)

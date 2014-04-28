@@ -6,20 +6,19 @@ class ScrapeFitc
   attr_accessor :page_url, :conference_day, :with_description
   attr_reader   :sessions
 
+  def initialize(page_url, conference_day)
+    @page_url = page_url
+    @conference_day = conference_day
+  end
+
   def with_description
     @with_description || false
   end
 
-  def get_page
-    @page = Nokogiri::HTML(open(@page_url))
-  end
-
-  def get_rows
-    return puts "Error: No content. Use get_page to get the page content." if @page.nil?
-    @rows = @page.css('.row')
-  end
-
   def build_sessions
+
+    get_page
+    get_rows
 
     return puts "Error: No content. Use get_page to get the page content." if @page.nil?
     return puts "Error: No rows. Use get_rows to get the content rows." if @rows.nil?
@@ -55,5 +54,17 @@ class ScrapeFitc
     end
     @sessions = items.map { |o| Hash[o.each_pair.to_a] }.to_json
   end
+
+  private
+
+  def get_page
+    @page = Nokogiri::HTML(open(@page_url))
+  end
+
+  def get_rows
+    return puts "Error: No content. Use get_page to get the page content." if @page.nil?
+    @rows = @page.css('.row')
+  end
+
 end
 
